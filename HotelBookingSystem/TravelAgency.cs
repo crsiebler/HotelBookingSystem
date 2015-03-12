@@ -14,6 +14,8 @@ namespace HotelBookingSystem
     {
         public event EventHandler PriceCut;
 
+        private double price;
+
         /// <summary>
         /// 
         /// </summary>
@@ -23,5 +25,16 @@ namespace HotelBookingSystem
             if (PriceCut != null)
                 PriceCut(this, e);
         }
+
+        public double Price
+        {
+            get { return price; }
+            set
+            {
+                OnPriceCut(EventArgs.Empty);
+                price = value; 
+            }
+        }
+
     }
 }
