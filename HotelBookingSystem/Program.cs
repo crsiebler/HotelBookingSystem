@@ -11,8 +11,13 @@ using System.Threading.Tasks;
 /// Class:  ASU CSE 445 (#11845)
 namespace HotelBookingSystem
 {
+    /// <summary>
+    /// 
+    /// </summary>
     class Program
     {
+        public const bool DEBUG = true;
+
         private const int K = 2; // Number of Hotel Suppliers
         private const int N = 5; // Number of Travel Agencies
 
@@ -67,7 +72,7 @@ namespace HotelBookingSystem
             }
 
             // Wait for user to hit a button
-            Console.Read();
+            Console.ReadKey();
         }
     }
 }

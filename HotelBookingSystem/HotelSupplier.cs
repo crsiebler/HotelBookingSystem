@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 /// Class:  ASU CSE 445 (#11845)
 namespace HotelBookingSystem
 {
+    /// <summary>
+    /// 
+    /// </summary>
     class HotelSupplier
     {
         private const int P_MAX = 10;
@@ -20,15 +23,17 @@ namespace HotelBookingSystem
         private static double previousPrice = 0.0;
         private static Random random = new Random();
 
-        public delegate void MyEventHandler(object sender, MyEventArgs e)
+        public delegate void PriceCutHandler(HotelSupplier sender, PriceCutEventArgs e);
+        public event PriceCutHandler PriceCut;
 
-        public event MyEventHandler MyEvent;
-
-        public void RaisesMyEvent()
+        /// <summary>
+        /// 
+        /// </summary>
+        public void PriceCutEvent()
         {
-           if(MyEvent != null)
+           if (PriceCut != null)
            {
-              MyEvent(this, new EventArgs(/*any info you want handlers to have*/));
+              PriceCut(this, new PriceCutEventArgs(currentPrice));
            }
         }
 
@@ -45,6 +50,9 @@ namespace HotelBookingSystem
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private static void SetPrice()
         {
             DateTime today = DateTime.Now;

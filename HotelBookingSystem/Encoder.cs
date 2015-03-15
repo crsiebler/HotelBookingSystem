@@ -12,8 +12,16 @@ using System.Xml.Serialization;
 /// Class:  ASU CSE 445 (#11845)
 namespace HotelBookingSystem
 {
+    /// <summary>
+    /// 
+    /// </summary>
     static class Encoder
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         public static string EncodeOrder(OrderClass order)
         {
             XmlSerializer serializer = new XmlSerializer(order.GetType());

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 /// Name:   Cory Siebler
@@ -12,8 +13,12 @@ namespace HotelBookingSystem
 {
     class TravelAgency
     {
+        private const int BASE_ROOM_ORDER = 10;
+        private const int BULK_ROOM_ORDER = 25;
+
         private double price = PricingModel.BASE_RATE;
         private static bool hotelsActive = true;
+        private static bool roomsNeeded = true;
 
         // Array of Credit Cards for Testing
         private long[] ccNums =
@@ -33,8 +38,44 @@ namespace HotelBookingSystem
         {
             while (hotelsActive)
             {
-
+                if (roomsNeeded)
+                {
+                    CreateBaseOrder();
+                    roomsNeeded = false;
+                }
+                else
+                {
+                    Thread.Sleep(10000);
+                }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hotel"></param>
+        public void Subscribe(HotelSupplier hotel)
+        {
+            hotel.PriceCut += new HotelSupplier.PriceCutHandler(CreateBulkOrder);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static void CreateBaseOrder()
+        {
+            //
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hotel"></param>
+        /// <param name="e"></param>
+        private static void CreateBulkOrder(HotelSupplier hotel, PriceCutEventArgs e)
+        {
+            roomsNeeded = false;
         }
 
         /// <summary>

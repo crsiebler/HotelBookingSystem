@@ -11,9 +11,13 @@ using System.Threading.Tasks;
 /// Class:  ASU CSE 445 (#11845)
 namespace HotelBookingSystem
 {
+    /// <summary>
+    /// 
+    /// </summary>
     class OrderClass
     {
-        private string senderId; // The identity of the sender
+        private string senderId; // The identity of the sender (i.e. TravelAgency)
+        private string receiverId; // The identity of the receiver (i.e. HotelSupplier)
         private long cardNo; // An integer that represents a credit card number
         private int amount; // Represents the number of rooms to order
         private DateTime dateCreated = DateTime.Now; // Time the order is placed
@@ -25,6 +29,7 @@ namespace HotelBookingSystem
         public override string ToString()
         {
             return "ORDER {ID: " + senderId
+                + "} {RECEIVER_ID: " + receiverId
                 + "} {CARD_NO: " + cardNo
                 + "} {AMOUNT: " + amount
                 + "} {CREATED: " + dateCreated.ToString("d", CultureInfo.InvariantCulture) + "}";
@@ -46,6 +51,15 @@ namespace HotelBookingSystem
         {
             get { return senderId; }
             set { senderId = value; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ReceiverId
+        {
+            get { return receiverId; }
+            set { receiverId = value; }
         }
 
         /// <summary>

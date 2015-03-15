@@ -11,6 +11,9 @@ using System.Threading;
 /// Class:  ASU CSE 445 (#11845)
 namespace HotelBookingSystem
 {
+    /// <summary>
+    /// 
+    /// </summary>
     class MultiCellBuffer
     {
         // Size of the Multi-Cell Buffer
