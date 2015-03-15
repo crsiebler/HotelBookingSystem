@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,8 +14,9 @@ namespace HotelBookingSystem
     class OrderClass
     {
         private string senderId; // The identity of the sender
-        private int cardNo; // An integer that represents a credit card number
+        private long cardNo; // An integer that represents a credit card number
         private int amount; // Represents the number of rooms to order
+        private DateTime dateCreated = DateTime.Now; // Time the order is placed
 
         /// <summary>
         /// 
@@ -22,7 +24,19 @@ namespace HotelBookingSystem
         /// <returns></returns>
         public override string ToString()
         {
-            return "ORDER {ID: " + senderId + "} {CARD_NO: " + cardNo + "} {AMOUNT: " + amount + "}";
+            return "ORDER {ID: " + senderId
+                + "} {CARD_NO: " + cardNo
+                + "} {AMOUNT: " + amount
+                + "} {CREATED: " + dateCreated.ToString("d", CultureInfo.InvariantCulture) + "}";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime DateCreated
+        {
+            get { return dateCreated; }
+            set { dateCreated = value; }
         }
 
         /// <summary>
@@ -37,7 +51,7 @@ namespace HotelBookingSystem
         /// <summary>
         /// 
         /// </summary>
-        public int CardNo
+        public long CardNo
         {
             get { return cardNo; }
             set { cardNo = value; }

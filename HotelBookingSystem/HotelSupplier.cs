@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 /// Name:   Cory Siebler
@@ -19,7 +20,17 @@ namespace HotelBookingSystem
         private static double previousPrice = 0.0;
         private static Random random = new Random();
 
-        public delegate double PriceCutEvent(object sender, EventArgs e);
+        public delegate void MyEventHandler(object sender, MyEventArgs e)
+
+        public event MyEventHandler MyEvent;
+
+        public void RaisesMyEvent()
+        {
+           if(MyEvent != null)
+           {
+              MyEvent(this, new EventArgs(/*any info you want handlers to have*/));
+           }
+        }
 
         /// <summary>
         /// 
@@ -30,6 +41,7 @@ namespace HotelBookingSystem
             while (p < P_MAX)
             {
                 SetPrice();
+                ProcessOrder(RetrieveOrder());
             }
         }
 
@@ -42,9 +54,24 @@ namespace HotelBookingSystem
             currentPrice = PricingModel.GetRates(random.NextDouble(), today, future);
         }
 
-        private static void RetrieveOrder()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private static OrderClass RetrieveOrder()
         {
-            Decoder.DecodeOrder(Program.mb.getOneCell());
+            return Decoder.DecodeOrder(Program.mb.getOneCell());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="order"></param>
+        private static void ProcessOrder(OrderClass order)
+        {
+            OrderProcessing processor = new OrderProcessing(order);
+            Thread processingThread = new Thread(new ThreadStart(processor.ProcessOrder));
+            processingThread.Start();
         }
     }
 }

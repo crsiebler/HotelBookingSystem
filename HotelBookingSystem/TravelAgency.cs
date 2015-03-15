@@ -12,8 +12,6 @@ namespace HotelBookingSystem
 {
     class TravelAgency
     {
-        public event EventHandler PriceCut;
-
         private double price = PricingModel.BASE_RATE;
         private static bool hotelsActive = true;
 
@@ -42,23 +40,15 @@ namespace HotelBookingSystem
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnPriceCut(EventArgs e)
-        {
-            if (PriceCut != null)
-                PriceCut(this, e);
-        }
-
         public double Price
         {
             get { return price; }
-            set
-            {
-                OnPriceCut(EventArgs.Empty);
-                price = value; 
-            }
+            set { price = value; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static bool HotelsActive
         {
             get { return TravelAgency.hotelsActive; }

@@ -26,9 +26,46 @@ namespace HotelBookingSystem
             + "|  (?:2131|1800|35\\d{3})\\d{11}"    // JCB
             + ")$";
 
-        private bool validateCreditCard(long ccNum)
+        private OrderClass order;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="order"></param>
+        public OrderProcessing(OrderClass order)
+        {
+            this.Order = order;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void ProcessOrder()
+        {
+            if (order != null)
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ccNum"></param>
+        /// <returns></returns>
+        private bool ValidateCreditCard(long ccNum)
         {
             return Regex.IsMatch(ccNum.ToString(), CC_REGEX);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public OrderClass Order
+        {
+            get { return order; }
+            private set { order = value; }
+        }
+
     }
 }
