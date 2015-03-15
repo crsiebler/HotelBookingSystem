@@ -13,28 +13,39 @@ namespace HotelBookingSystem
     class OrderClass
     {
         private string senderId; // The identity of the sender
-        private string receiverId; // The identity of the receiver
         private int cardNo; // An integer that represents a credit card number
         private int amount; // Represents the number of rooms to order
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return "ORDER {ID: " + senderId + "} {CARD_NO: " + cardNo + "} {AMOUNT: " + amount + "}";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string SenderId
         {
             get { return senderId; }
             set { senderId = value; }
         }
 
-        public string ReceiverId
-        {
-            get { return receiverId; }
-            set { receiverId = value; }
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public int CardNo
         {
             get { return cardNo; }
             set { cardNo = value; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int Amount
         {
             get { return amount; }

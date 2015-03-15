@@ -8,14 +8,14 @@ namespace HotelBookingSystem
 {
     static class PricingModel
     {
+        public const double BASE_RATE = 85.0; // Standard Rate 
+
         private const int LOW_SPAN = 2; // 2 Day Stay
         private const int MED_SPAN = 4; // 4 Day Stay
         private const int HIGH_SPAN = 7; // 7 Day Stay
         private const double LOW_OCCUPANCY = .40; // 40% Not Vacant
         private const double MED_OCCUPANCY = .65; // 65% Not Vacant
         private const double HIGH_OCCUPANCY = .90; // 90% Not Vacant
-
-        private const double BASE_RATE = 85.0; // $65.00 Standard Rate 
 
         private const double LOW_SPAN_ADJUST = 1.25; // 25% Markup
         private const double MED_SPAN_ADJUST = 1.0; // Full Price

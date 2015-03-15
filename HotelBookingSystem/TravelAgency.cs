@@ -14,7 +14,30 @@ namespace HotelBookingSystem
     {
         public event EventHandler PriceCut;
 
-        private double price;
+        private double price = PricingModel.BASE_RATE;
+        private static bool hotelsActive = true;
+
+        // Array of Credit Cards for Testing
+        private long[] ccNums =
+        {
+            4916039504020044,   // Visa
+            5106907925117390,   // Mastercard
+            374951333742767,    // American Express
+            36751711436416,     // Diner's Club
+            6011046631647226,   // Discover
+            3553991022581867    // JCB
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void Run()
+        {
+            while (hotelsActive)
+            {
+
+            }
+        }
 
         /// <summary>
         /// 
@@ -36,5 +59,10 @@ namespace HotelBookingSystem
             }
         }
 
+        public static bool HotelsActive
+        {
+            get { return TravelAgency.hotelsActive; }
+            set { TravelAgency.hotelsActive = value; }
+        }
     }
 }

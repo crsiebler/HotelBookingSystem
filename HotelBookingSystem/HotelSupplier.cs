@@ -14,6 +14,37 @@ namespace HotelBookingSystem
     {
         private const int P_MAX = 10;
 
+        private static int p = 0;
+        private static double currentPrice = 0.0;
+        private static double previousPrice = 0.0;
+        private static Random random = new Random();
+
         public delegate double PriceCutEvent(object sender, EventArgs e);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void Run()
+        {
+            // Continue until P_MAX price cuts have been sent
+            while (p < P_MAX)
+            {
+                SetPrice();
+            }
+        }
+
+        private static void SetPrice()
+        {
+            DateTime today = DateTime.Now;
+            DateTime future = today.AddDays(random.Next(1,10));
+            
+            previousPrice = currentPrice;
+            currentPrice = PricingModel.GetRates(random.NextDouble(), today, future);
+        }
+
+        private static void RetrieveOrder()
+        {
+            Decoder.DecodeOrder(Program.mb.getOneCell());
+        }
     }
 }
