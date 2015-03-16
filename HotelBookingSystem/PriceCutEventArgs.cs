@@ -12,18 +12,32 @@ namespace HotelBookingSystem
 {
     /// <summary>
     /// Custom class that derives EventArgs. Adds the Price field to pass to the TravelAgency.
+    /// 
+    /// THIS CLASS IS NOT USED IN THIS SOLUTION.
     /// </summary>
     public class PriceCutEventArgs : EventArgs
     {
         private double price;
+        private string id;
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="price"></param>
-        public PriceCutEventArgs(double price)
+        public PriceCutEventArgs(string id, double price)
         {
+            this.Id = id;
             this.Price = price;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Id
+        {
+            get { return id; }
+            set { id = value; }
         }
 
         /// <summary>

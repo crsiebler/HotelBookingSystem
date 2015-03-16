@@ -21,12 +21,12 @@ namespace HotelBookingSystem
     {
         private const int P_MAX = 10; // Constant for Maximum Price Cuts
 
-        private static int p = 0; // Counter for the price cuts
+        private static int p = 1; // Counter for the price cuts
         private static double currentPrice = 0.0; // Current Unit Price for the rooms
         private static double previousPrice = 0.0; // Previous Unit Price for the rooms
         private static Random random = new Random(); // Random number generator
 
-        public delegate void PriceCutHandler(HotelSupplier sender, PriceCutEventArgs e);
+        public delegate void PriceCutHandler(PriceCutEventArgs e);
         public static event PriceCutHandler PriceCut;
 
         /// <summary>
@@ -38,8 +38,9 @@ namespace HotelBookingSystem
             if (PriceCut != null)
             {
                 // Fire the PriceCut event
-                Console.WriteLine("EVENT: Performing Price Cut Event");
-                PriceCut(null, new PriceCutEventArgs(currentPrice));
+                Console.WriteLine("EVENT: Performing Price Cut Event (#{0}) ({1})", p, Thread.CurrentThread.Name);
+                p++;
+                PriceCut(new PriceCutEventArgs(Thread.CurrentThread.Name, currentPrice));
             }
             else
             {
@@ -71,6 +72,9 @@ namespace HotelBookingSystem
 
                 // Retrieve and Process orders from the Multi-Cell buffer
                 ProcessOrder(RetrieveOrder());
+
+                //Console.WriteLine("WAITING: Hotel Supplier Thread ({0})", Thread.CurrentThread.Name);
+                //Thread.Sleep(5000);
             }
         }
 
@@ -82,12 +86,18 @@ namespace HotelBookingSystem
             DateTime today = DateTime.Now;
             DateTime future = today.AddDays(random.Next(1,10));
 
-            if (Program.DEBUG) Console.WriteLine("PRICING: Starting Calculation");
+            if (Program.DEBUG) Console.WriteLine("PRICING: ({0}) Starting Calculation", Thread.CurrentThread.Name);
 
             previousPrice = currentPrice;
             currentPrice = PricingModel.GetRates(random.NextDouble(), today, future);
 
-            if (Program.DEBUG) Console.WriteLine("PRICING: Price Finalized ({0})", currentPrice.ToString("C"));
+            if (Program.DEBUG)
+            {
+                Console.WriteLine("PRICING: ({0}) Price Finalized ({1})",
+                    Thread.CurrentThread.Name,
+                    currentPrice.ToString("C")
+                );
+            }
         }
 
         /// <summary>
@@ -105,9 +115,18 @@ namespace HotelBookingSystem
         /// <param name="order"></param>
         private static void ProcessOrder(OrderClass order)
         {
-            OrderProcessing processor = new OrderProcessing(order);
-            Thread processingThread = new Thread(new ThreadStart(processor.ProcessOrder));
-            processingThread.Start();
+            // Make sure the order is for the current HotelSupplier
+            if (order.ReceiverId == Thread.CurrentThread.Name || order.ReceiverId == null)
+            {
+                Console.WriteLine("RECEIVING: Order for Hotel Supplier ({0})", order.ReceiverId);
+                OrderProcessing processor = new OrderProcessing(order);
+                Thread processingThread = new Thread(new ThreadStart(processor.ProcessOrder));
+                processingThread.Start();
+            }
+            else
+            {
+                Console.WriteLine("SKIPPING: Ignoring order not for Hotel Supplier ({0})", Thread.CurrentThread.Name);
+            }
         }
     }
 }

@@ -41,6 +41,8 @@ namespace HotelBookingSystem
         /// </summary>
         public static void Run()
         {
+            Subscribe();
+
             // Continue thread until Hotels are no longer active
             while (hotelsActive)
             {
@@ -52,8 +54,8 @@ namespace HotelBookingSystem
                 else
                 {
                     // No orders are needed so sleep the thread for some time
-                    Console.WriteLine("WAITING: No orders needed ({0})", Thread.CurrentThread.Name);
-                    Thread.Sleep(10000);
+                    Console.WriteLine("WAITING: Travel Agency Thread ({0})", Thread.CurrentThread.Name);
+                    Thread.Sleep(15000);
                     roomsNeeded = true;
                 }
             }
@@ -63,7 +65,7 @@ namespace HotelBookingSystem
         /// Hook the PriceCut event to the CreateBulkOrder method, so a large order will be placed once the event is fired.
         /// </summary>
         /// <param name="hotel"></param>
-        public void Subscribe()
+        public static void Subscribe()
         {
             Console.WriteLine("SUBSCRIBING: Price Cut Event ({0})", Thread.CurrentThread.Name);
             HotelSupplier.PriceCut += CreateBulkOrder;
@@ -91,16 +93,17 @@ namespace HotelBookingSystem
         /// </summary>
         /// <param name="hotel"></param>
         /// <param name="e"></param>
-        private static void CreateBulkOrder(HotelSupplier hotel, PriceCutEventArgs e)
+        private static void CreateBulkOrder(PriceCutEventArgs e)
         {
             // Tell system no order is needed
             roomsNeeded = false;
-            Console.WriteLine("CREATING: Bulk Order ({0})", Thread.CurrentThread.Name);
+            Console.WriteLine("CREATING: Bulk Order ({0})", e.Id);
 
             OrderClass order = new OrderClass();
             order.Amount = BULK_ROOM_ORDER;
             order.CardNo = CC_NUMS[random.Next(0, CC_NUMS.Length)];
             order.SenderId = Thread.CurrentThread.Name;
+            order.ReceiverId = e.Id;
 
             Program.mb.setOneCell(Encoder.EncodeOrder(order));
         }

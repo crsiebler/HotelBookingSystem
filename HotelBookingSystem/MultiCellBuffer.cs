@@ -19,7 +19,9 @@ namespace HotelBookingSystem
     public class MultiCellBuffer
     {
         // Size of the Multi-Cell Buffer
-        private const int N = 3; 
+        private const int N = 3;
+        private const int WRITE_RESOURCES = 1;
+        private const int READ_RESOURCES = 2;
 
         // Helpers to keep track of buffer position
         int head = 0;
@@ -30,8 +32,8 @@ namespace HotelBookingSystem
         string[] buffer = new string[N];
 
         // Semaphores to control read/write access
-        Semaphore write = new Semaphore(3, 3);
-        Semaphore read = new Semaphore(2, 2);
+        Semaphore write = new Semaphore(WRITE_RESOURCES, WRITE_RESOURCES);
+        Semaphore read = new Semaphore(READ_RESOURCES, READ_RESOURCES);
 
         /// <summary>
         /// 
@@ -40,19 +42,20 @@ namespace HotelBookingSystem
         public void setOneCell(string order)
         {
             write.WaitOne();
-            Console.WriteLine("Thread: " + Thread.CurrentThread.Name + " Entred Write");
+            Console.WriteLine("THREAD: " + Thread.CurrentThread.Name + " Entered Write");
             lock (this)
             {
                 while (nElements == N)
                 {
+                    if (Program.DEBUG) Console.WriteLine("MONITOR: Waiting ({0})", Thread.CurrentThread.Name);
                     Monitor.Wait(this);
                 }
 
                 buffer[tail] = order;
                 tail = (tail + 1) % N;
-                Console.WriteLine("Write to the buffer: {0}, {1}, {2}", order, DateTime.Now, nElements);
+                Console.WriteLine("WRITING: Multi-Cell Buffer\n\n{0}\n{1}, Elements: {2}\n", order, DateTime.Now, nElements);
                 nElements++;
-                Console.WriteLine("Thread: " + Thread.CurrentThread.Name + " Leaving Write");
+                Console.WriteLine("THREAD: ({0}) Leaving Write", Thread.CurrentThread.Name);
                 write.Release();
                 Monitor.Pulse(this);
 
@@ -66,21 +69,22 @@ namespace HotelBookingSystem
         public string getOneCell()
         {
             read.WaitOne();
-            Console.WriteLine("Thread: " + Thread.CurrentThread.Name + " Entered Read");
+            Console.WriteLine("THREAD: " + Thread.CurrentThread.Name + " Entered Read");
             lock (this)
             {
                 string element;
 
                 while (nElements == 0)
                 {
+                    if (Program.DEBUG) Console.WriteLine("MONITOR: Waiting ({0})", Thread.CurrentThread.Name);
                     Monitor.Wait(this);
                 }
 
                 element = buffer[head];
                 head = (head + 1) % N;
                 nElements--;
-                Console.WriteLine("Read from the buffer: {0} , {1}, {2}", element, DateTime.Now, nElements);
-                Console.WriteLine("Thread: " + Thread.CurrentThread.Name + " Leaving Read");
+                Console.WriteLine("READING: Multi-Cell Buffer\n\n{0}\n{1}, Elements: {2}\n", element, DateTime.Now, nElements);
+                Console.WriteLine("THREAD: ({0}) Leaving Read", Thread.CurrentThread.Name);
                 read.Release();
                 Monitor.Pulse(this);
                 return element;

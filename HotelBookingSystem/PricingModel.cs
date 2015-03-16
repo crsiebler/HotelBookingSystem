@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 /// Name:   Cory Siebler
@@ -48,7 +49,8 @@ namespace HotelBookingSystem
         public static double GetRates(double occupancy, DateTime checkIn, DateTime checkOut)
         {
             if (Program.DEBUG) 
-                Console.WriteLine("PRICING: Occupancy ({0})\tCheck-In ({1})\tCheck-Out ({2})",
+                Console.WriteLine("PRICING: ({0}) Occupancy ({1})\tCheck-In ({2})\tCheck-Out ({3})",
+                    Thread.CurrentThread.Name,
                     (occupancy * 100).ToString("F") + "%", 
                     checkIn.ToString("d", CultureInfo.InvariantCulture), 
                     checkOut.ToString("d", CultureInfo.InvariantCulture)
@@ -70,22 +72,22 @@ namespace HotelBookingSystem
             // Check the Span of the Travel Agency order
             if (span.TotalDays < LOW_SPAN)
             {
-                if (Program.DEBUG) Console.WriteLine("PRICING: Low Span");
+                if (Program.DEBUG) Console.WriteLine("PRICING: ({0}) Low Span", Thread.CurrentThread.Name);
                 return LOW_SPAN_ADJUST;
             }
             else if (span.TotalDays < MED_SPAN)
             {
-                if (Program.DEBUG) Console.WriteLine("PRICING: Medium Span");
+                if (Program.DEBUG) Console.WriteLine("PRICING: ({0}) Medium Span", Thread.CurrentThread.Name);
                 return MED_SPAN_ADJUST;
             }
             else if (span.TotalDays < HIGH_SPAN)
             {
-                if (Program.DEBUG) Console.WriteLine("PRICING: High Span");
+                if (Program.DEBUG) Console.WriteLine("PRICING: ({0}) High Span", Thread.CurrentThread.Name);
                 return HIGH_SPAN_ADJUST;
             }
             else
             {
-                if (Program.DEBUG) Console.WriteLine("PRICING: Max Span");
+                if (Program.DEBUG) Console.WriteLine("PRICING: ({0}) Max Span", Thread.CurrentThread.Name);
                 return MAX_SPAN_ADJUST;
             }
         }
@@ -99,22 +101,22 @@ namespace HotelBookingSystem
         {
             if (occupancy < LOW_OCCUPANCY)
             {
-                if (Program.DEBUG) Console.WriteLine("PRICING: Low Occupancy");
+                if (Program.DEBUG) Console.WriteLine("PRICING: ({0}) Low Occupancy", Thread.CurrentThread.Name);
                 return LOW_OCCUPANCY_ADJUST;
             }
             else if (occupancy < MED_OCCUPANCY)
             {
-                if (Program.DEBUG) Console.WriteLine("PRICING: Medium Occupancy");
+                if (Program.DEBUG) Console.WriteLine("PRICING: ({0}) Medium Occupancy", Thread.CurrentThread.Name);
                 return MED_OCCUPANCY_ADJUST;
             }
             else if (occupancy < HIGH_OCCUPANCY)
             {
-                if (Program.DEBUG) Console.WriteLine("PRICING: High Occupancy");
+                if (Program.DEBUG) Console.WriteLine("PRICING: ({0}) High Occupancy", Thread.CurrentThread.Name);
                 return HIGH_OCCUPANCY_ADJUST;
             }
             else
             {
-                if (Program.DEBUG) Console.WriteLine("PRICING: Max Occupancy");
+                if (Program.DEBUG) Console.WriteLine("PRICING: ({0}) Max Occupancy", Thread.CurrentThread.Name);
                 return MAX_OCCUPANCY_ADJUST;
             }
         }

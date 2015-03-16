@@ -35,6 +35,7 @@ namespace HotelBookingSystem
             for (int i = 0; i < K; ++i)
             {
                 hotelThreads[i] = new Thread(HotelSupplier.Run);
+                hotelThreads[i].Name = "HotelSupplier_" + i;
                 hotelThreads[i].Start();
                 while (!hotelThreads[i].IsAlive);
             }
@@ -43,6 +44,7 @@ namespace HotelBookingSystem
             for (int i = 0; i < N; ++i)
             {
                 agencyThreads[i] = new Thread(TravelAgency.Run);
+                agencyThreads[i].Name = "TravelAgency_" + i;
                 agencyThreads[i].Start();
                 while (!agencyThreads[i].IsAlive);
             }
@@ -70,6 +72,8 @@ namespace HotelBookingSystem
             {
                 TravelAgency.HotelsActive = false;
             }
+
+            Console.WriteLine("PROGRAM COMPLETED");
 
             // Wait for user to hit a button
             Console.ReadKey();
