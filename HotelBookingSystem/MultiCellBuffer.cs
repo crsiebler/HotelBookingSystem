@@ -36,7 +36,7 @@ namespace HotelBookingSystem
         Semaphore read = new Semaphore(READ_RESOURCES, READ_RESOURCES);
 
         /// <summary>
-        /// 
+        /// Mutator for the Multi-Cell Buffer. Uses locks, Monitors, and Semaphores to ensure synchronization between threads.
         /// </summary>
         /// <param name="order">String representation of the Order from the Travel Agency</param>
         public void setOneCell(string order)
@@ -67,9 +67,9 @@ namespace HotelBookingSystem
         }
 
         /// <summary>
-        /// 
+        /// Accessor for the Multi-Cell Buffer. Uses locks, Monitors, and Semaphores to ensure synchronization between threads.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>String representation of the Order from the Travel Agency</returns>
         public string getOneCell()
         {
             read.WaitOne();

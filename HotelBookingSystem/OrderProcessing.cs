@@ -26,16 +26,16 @@ namespace HotelBookingSystem
         private OrderClass order;
 
         /// <summary>
-        /// 
+        /// Constructor for the OrderProcesing
         /// </summary>
-        /// <param name="order"></param>
+        /// <param name="order">Order to be processed</param>
         public OrderProcessing(OrderClass order)
         {
             this.Order = order;
         }
 
         /// <summary>
-        /// 
+        /// Executing logic for the Order Processing.
         /// </summary>
         public void ProcessOrder()
         {
@@ -66,15 +66,15 @@ namespace HotelBookingSystem
         /// Validates a Credit Card number using a Regular Expression. Allows for Visa, Mastercard, AMEX, Discover, JCB, and Diner's Club cards.
         /// A list of valid numbers is found in the TravelAgency class.
         /// </summary>
-        /// <param name="ccNum"></param>
-        /// <returns></returns>
+        /// <param name="ccNum">Credit Card Number</param>
+        /// <returns>True if credit card it valid. False if invalid.</returns>
         private bool ValidateCreditCard(long ccNum)
         {
             return Regex.IsMatch(ccNum.ToString(), CC_REGEX);
         }
 
         /// <summary>
-        /// 
+        /// Accessor/Mutators
         /// </summary>
         public OrderClass Order
         {

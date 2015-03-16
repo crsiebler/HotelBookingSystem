@@ -122,7 +122,7 @@ namespace HotelBookingSystem
         /// <summary>
         /// Collect orders from the Multi-Cell Buffer
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Order retrieved from the Multi-Cell Buffer</returns>
         private OrderClass RetrieveOrder()
         {
             return Decoder.DecodeOrder(Program.mb.getOneCell());
@@ -131,7 +131,7 @@ namespace HotelBookingSystem
         /// <summary>
         /// Create a new thread to process the order.
         /// </summary>
-        /// <param name="order"></param>
+        /// <param name="order">Order from the TravelAgency threads</param>
         private void ProcessOrder(OrderClass order)
         {
             // Make sure the order is for the current HotelSupplier

@@ -36,7 +36,7 @@ namespace HotelBookingSystem
         }
 
         /// <summary>
-        /// 
+        /// Accessor/Mutator
         /// </summary>
         public DateTime DateCreated
         {
@@ -45,7 +45,7 @@ namespace HotelBookingSystem
         }
 
         /// <summary>
-        /// 
+        /// Accessor/Mutator
         /// </summary>
         public string SenderId
         {
@@ -54,7 +54,7 @@ namespace HotelBookingSystem
         }
 
         /// <summary>
-        /// 
+        /// Accessor/Mutator
         /// </summary>
         public string ReceiverId
         {
@@ -63,7 +63,7 @@ namespace HotelBookingSystem
         }
 
         /// <summary>
-        /// 
+        /// Accessor/Mutator
         /// </summary>
         public long CardNo
         {
@@ -72,7 +72,7 @@ namespace HotelBookingSystem
         }
 
         /// <summary>
-        /// 
+        /// Accessor/Mutator
         /// </summary>
         public int Amount
         {

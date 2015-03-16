@@ -20,8 +20,8 @@ namespace HotelBookingSystem
         /// <summary>
         /// Utilizes the XmlSerializer to decode the encoded string into an OrderClass.
         /// </summary>
-        /// <param name="encodedOrder"></param>
-        /// <returns></returns>
+        /// <param name="encodedOrder">String representation of the Order from the Travel Agency</param>
+        /// <returns>OrderClass from the encoded string</returns>
         public static OrderClass DecodeOrder(string encodedOrder)
         {
             XmlSerializer deserializer = new XmlSerializer(typeof(OrderClass));

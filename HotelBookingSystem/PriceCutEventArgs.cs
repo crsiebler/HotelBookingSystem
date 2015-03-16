@@ -11,9 +11,7 @@ using System.Threading.Tasks;
 namespace HotelBookingSystem
 {
     /// <summary>
-    /// Custom class that derives EventArgs. Adds the Price field to pass to the TravelAgency.
-    /// 
-    /// THIS CLASS IS NOT USED IN THIS SOLUTION.
+    /// Custom class that derives EventArgs. Adds the Price and Id fields to pass to the TravelAgency.
     /// </summary>
     public class PriceCutEventArgs : EventArgs
     {

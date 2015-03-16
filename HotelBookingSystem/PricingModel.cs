@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 namespace HotelBookingSystem
 {
     /// <summary>
-    /// 
+    /// Algorithm model to calculate the rate of the Hotel Supplier. Utilizes an Occupany and a Length of Stay (Span) to determine the price.
+    /// Incorporated a random number generator to fluctuate the price more frequently to ensure Price Cut events are thrown.
     /// </summary>
     public static class PricingModel
     {
@@ -40,12 +41,12 @@ namespace HotelBookingSystem
         private static Random random = new Random(); // Random number generator
 
         /// <summary>
-        /// 
+        /// Determines the unit price for the Hotel Supplier.
         /// </summary>
-        /// <param name="occupancy"></param>
-        /// <param name="checkIn"></param>
-        /// <param name="checkOut"></param>
-        /// <returns></returns>
+        /// <param name="occupancy">Percentage of rooms occupied</param>
+        /// <param name="checkIn">Beginning Date Range</param>
+        /// <param name="checkOut">Ending Date Range</param>
+        /// <returns>Unit Price</returns>
         public static double GetRates(double occupancy, DateTime checkIn, DateTime checkOut)
         {
             if (Program.DEBUG) 
@@ -63,10 +64,10 @@ namespace HotelBookingSystem
         }
 
         /// <summary>
-        /// 
+        /// Calculates the adjustment to the unit price based on the time span given.
         /// </summary>
-        /// <param name="span"></param>
-        /// <returns></returns>
+        /// <param name="span">Time Difference between the two dates</param>
+        /// <returns>Adjustment %</returns>
         private static double AdjustForSpan(TimeSpan span)
         {
             // Check the Span of the Travel Agency order
@@ -93,10 +94,10 @@ namespace HotelBookingSystem
         }
 
         /// <summary>
-        /// 
+        /// Calculates the adjustment to the unit price based on the occupancy.
         /// </summary>
-        /// <param name="occupancy"></param>
-        /// <returns></returns>
+        /// <param name="occupancy">Percentage of rooms occupied</param>
+        /// <returns>Adjustment %</returns>
         private static double AdjustForOccupancy(double occupancy)
         {
             if (occupancy < LOW_OCCUPANCY)

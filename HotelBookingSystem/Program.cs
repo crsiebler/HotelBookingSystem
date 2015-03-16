@@ -12,11 +12,13 @@ using System.Threading.Tasks;
 namespace HotelBookingSystem
 {
     /// <summary>
-    /// 
+    /// Main Thread for the Hotel Booking System. Initializes the HotelSupplier threads and the TravelAgency threads. Alerts the TravelAgency
+    /// threads when the HotelSupplier threads are complete. Also holds the Multi-Cell Buffer used to communicate with the HotelSupplier and the
+    /// TravelAgency threads.
     /// </summary>
     public class Program
     {
-        public const bool DEBUG = true;
+        public const bool DEBUG = false;
 
         private const int K = 2; // Number of Hotel Suppliers
         private const int N = 5; // Number of Travel Agencies
@@ -47,7 +49,8 @@ namespace HotelBookingSystem
             for (int i = 0; i < N; ++i)
             {
                 TravelAgency travelAgency = new TravelAgency();
-
+                
+                // Loop through the Hotel Suppliers and Subscribe to the Price Cut event
                 for (int j= 0; j < K; ++j)
                 {
                     travelAgency.Subscribe(hotelSuppliers[j]);
@@ -59,32 +62,22 @@ namespace HotelBookingSystem
                 while (!agencyThreads[i].IsAlive);
             }
 
-            /*
-            // Block the main thread execution
-            for (int i = 0; i < K; i++)
-            {
-                hotelThreads[i].Join();
-            }
-
-            // Block the main thread execution
-            for (int i = 0; i < N; i++)
-            {
-                agencyThreads[i].Join();
-            }
-             */
-
             // Wait for the Hotels to perform P_MAX price cuts
             for (int i = 0; i < K; ++i)
             {
-                while (hotelThreads[i].IsAlive)
-                {
-                }
+                while (hotelThreads[i].IsAlive) ;
             }
 
             // Alert the Travel Agencies that the Hotels are no longer active
             for (int i = 0; i < N; ++i)
             {
                 TravelAgency.HotelsActive = false;
+            }
+
+            // Wait for the Travel Agency to close
+            for (int i = 0; i < N; ++i)
+            {
+                while (agencyThreads[i].IsAlive) ;
             }
 
             Console.WriteLine("\n\nPROGRAM COMPLETED");

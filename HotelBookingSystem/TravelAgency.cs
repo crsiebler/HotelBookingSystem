@@ -13,8 +13,8 @@ namespace HotelBookingSystem
 {
     /// <summary>
     /// A TravelAgency evaluates the price, generates an OrderObject (consisting of multiple values), and sends the order to the Encoder to
-    /// convert the order object into a plain string. The TravelAgency sends the encoded string to one of the free cells in the MultiCellBuffer.
-    /// 
+    /// convert the order object into a plain string. The TravelAgency sends the encoded string to one of the free cells in the 
+    /// MultiCellBuffer.
     /// </summary>
     public class TravelAgency
     {
@@ -53,7 +53,6 @@ namespace HotelBookingSystem
                 {
                     // No orders are needed so sleep the thread for some time
                     Console.WriteLine("WAITING: Travel Agency Thread ({0})", Thread.CurrentThread.Name);
-                    //Thread.Sleep(5000);
                     roomsNeeded = true;
                 }
             }
@@ -64,7 +63,7 @@ namespace HotelBookingSystem
         /// <summary>
         /// Hook the PriceCut event to the CreateBulkOrder method, so a large order will be placed once the event is fired.
         /// </summary>
-        /// <param name="hotel"></param>
+        /// <param name="hotel">Hotel to subscibe to price cut events</param>
         public void Subscribe(HotelSupplier hotelSupplier)
         {
             Console.WriteLine("SUBSCRIBING: Price Cut Event");
@@ -91,8 +90,7 @@ namespace HotelBookingSystem
         /// <summary>
         /// Called once a PriceCut event occurs. Orders BULK_ROOM_ORDER rooms.
         /// </summary>
-        /// <param name="hotel"></param>
-        /// <param name="e"></param>
+        /// <param name="e">Values passed from HotelSupplier thread</param>
         private void CreateBulkOrder(PriceCutEventArgs e)
         {
             // Tell system no order is needed
@@ -105,11 +103,11 @@ namespace HotelBookingSystem
             order.SenderId = Thread.CurrentThread.Name;
             order.ReceiverId = e.Id;
 
-            //Program.mb.setOneCell(Encoder.EncodeOrder(order));
+            Program.mb.setOneCell(Encoder.EncodeOrder(order));
         }
 
         /// <summary>
-        /// 
+        /// Accessor/Mutator
         /// </summary>
         public static bool HotelsActive
         {
