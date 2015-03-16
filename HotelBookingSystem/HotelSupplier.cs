@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,8 @@ namespace HotelBookingSystem
         private double currentPrice = 0.0; // Current Unit Price for the rooms
         private double previousPrice = 0.0; // Previous Unit Price for the rooms
         private static Random random = new Random(); // Random number generator
+
+        private ArrayList processingThreads = new ArrayList();
 
         public delegate void PriceCutHandler(PriceCutEventArgs e);
         public event PriceCutHandler PriceCut;
@@ -86,6 +89,11 @@ namespace HotelBookingSystem
                 //Thread.Sleep(5000);
             }
 
+            foreach (Thread item in processingThreads)
+            {
+                while (item.IsAlive);
+            }
+
             Console.WriteLine("CLOSING: Hotel Supplier Thread ({0})", Thread.CurrentThread.Name);
         }
 
@@ -132,6 +140,7 @@ namespace HotelBookingSystem
                 Console.WriteLine("RECEIVING: Order for Hotel Supplier ({0})", Thread.CurrentThread.Name);
                 OrderProcessing processor = new OrderProcessing(order);
                 Thread processingThread = new Thread(new ThreadStart(processor.ProcessOrder));
+                processingThreads.Add(processingThread);
                 processingThread.Name = "Processor_" + Thread.CurrentThread.Name;
                 processingThread.Start();
             }
