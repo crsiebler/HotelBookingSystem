@@ -4,3 +4,9 @@ C:\Users\Cdub\documents\visual studio 2013\Projects\HotelBookingSystem\HotelBook
 C:\Users\Cdub\documents\visual studio 2013\Projects\HotelBookingSystem\HotelBookingSystem\bin\Debug\HotelBookingSystem.pdb
 C:\Users\Cdub\documents\visual studio 2013\Projects\HotelBookingSystem\HotelBookingSystem\obj\Debug\HotelBookingSystem.exe
 C:\Users\Cdub\documents\visual studio 2013\Projects\HotelBookingSystem\HotelBookingSystem\obj\Debug\HotelBookingSystem.pdb
+C:\Users\csieb_000\Documents\Visual Studio 2013\Projects\HotelBookingSystem\HotelBookingSystem\bin\Debug\HotelBookingSystem.exe.config
+C:\Users\csieb_000\Documents\Visual Studio 2013\Projects\HotelBookingSystem\HotelBookingSystem\obj\Debug\HotelBookingSystem.csprojResolveAssemblyReference.cache
+C:\Users\csieb_000\Documents\Visual Studio 2013\Projects\HotelBookingSystem\HotelBookingSystem\bin\Debug\HotelBookingSystem.exe
+C:\Users\csieb_000\Documents\Visual Studio 2013\Projects\HotelBookingSystem\HotelBookingSystem\bin\Debug\HotelBookingSystem.pdb
+C:\Users\csieb_000\Documents\Visual Studio 2013\Projects\HotelBookingSystem\HotelBookingSystem\obj\Debug\HotelBookingSystem.exe
+C:\Users\csieb_000\Documents\Visual Studio 2013\Projects\HotelBookingSystem\HotelBookingSystem\obj\Debug\HotelBookingSystem.pdb

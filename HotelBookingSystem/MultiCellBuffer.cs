@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Xml;
 
 /// Name:   Cory Siebler
 /// ASUID:  1000832292
@@ -20,7 +21,7 @@ namespace HotelBookingSystem
     {
         // Size of the Multi-Cell Buffer
         private const int N = 3;
-        private const int WRITE_RESOURCES = 1;
+        private const int WRITE_RESOURCES = 3;
         private const int READ_RESOURCES = 2;
 
         // Helpers to keep track of buffer position
@@ -45,6 +46,7 @@ namespace HotelBookingSystem
             Console.WriteLine("THREAD: " + Thread.CurrentThread.Name + " Entered Write");
             lock (this)
             {
+                // Busy Wait until there is a slot available in the Multi-Cell Buffer
                 while (nElements == N)
                 {
                     if (Program.DEBUG) Console.WriteLine("MONITOR: Write Waiting {0}", Thread.CurrentThread.Name);
@@ -53,13 +55,15 @@ namespace HotelBookingSystem
 
                 buffer[tail] = order;
                 tail = (tail + 1) % N;
+
                 Console.WriteLine("WRITING: ({0}) Multi-Cell Buffer\n\n{1}\n{2}, Elements: {3}\n",
                     Thread.CurrentThread.Name,
                     order,
                     DateTime.Now,
                     nElements
                 );
-                nElements++;
+
+                nElements++; // Increment the amount of elements
                 Console.WriteLine("THREAD: ({0}) Leaving Write", Thread.CurrentThread.Name);
                 write.Release();
                 Monitor.Pulse(this);
@@ -77,7 +81,9 @@ namespace HotelBookingSystem
             lock (this)
             {
                 string element;
+                XmlDocument doc = new XmlDocument();
 
+                // Busy Wait until an Element is in the Multi-Cell Buffer
                 while (nElements == 0)
                 {
                     if (Program.DEBUG) Console.WriteLine("MONITOR: Read Waiting {0}", Thread.CurrentThread.Name);
@@ -85,14 +91,30 @@ namespace HotelBookingSystem
                 }
 
                 element = buffer[head];
-                head = (head + 1) % N;
-                nElements--;
-                Console.WriteLine("READING: ({0}) Multi-Cell Buffer\n\n{1}\n{2}, Elements: {3}\n", 
-                    Thread.CurrentThread.Name,
-                    element, 
-                    DateTime.Now,
-                    nElements
-                );
+
+                // Check the XML for the ReceiverId
+                doc.LoadXml(element);
+                XmlElement node = doc.GetElementById("ReceiverId");
+
+                // Make sure the ReceiverId matches the HotelSupplier
+                if (node == null || Thread.CurrentThread.Name == node.InnerText)
+                {
+                    // Order is for HotelSupplier, Extract order to process
+                    head = (head + 1) % N;
+                    nElements--;
+                    Console.WriteLine("READING: ({0}) Multi-Cell Buffer\n\n{1}\n{2}, Elements: {3}\n",
+                        Thread.CurrentThread.Name,
+                        element,
+                        DateTime.Now,
+                        nElements
+                    );
+                }
+                else
+                {
+                    // ReceiverId does not match the HotelSupplier so do not extract order
+                    Console.WriteLine("SKIPPING: Order not for Hotel Supplier ({0})", Thread.CurrentThread.Name);
+                }
+
                 Console.WriteLine("THREAD: ({0}) Leaving Read", Thread.CurrentThread.Name);
                 read.Release();
                 Monitor.Pulse(this);

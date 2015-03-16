@@ -83,7 +83,8 @@ namespace HotelBookingSystem
             Console.WriteLine("\n\nPROGRAM COMPLETED");
 
             // Wait for user to hit a button
-            Console.ReadKey();
+            Console.WriteLine("HIT ENTER TO QUIT");
+            Console.ReadLine();
         }
     }
 }

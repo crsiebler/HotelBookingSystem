@@ -35,6 +35,9 @@ namespace HotelBookingSystem
         private static bool hotelsActive = true;
         private static Random random = new Random(); // Random number generator
         private bool roomsNeeded = true;
+        private bool bulkOrder = false;
+        private double unitPrice;
+        private string hotelId;
 
         /// <summary>
         /// Execution thread for the TravelAgency class. Creates a base order continuously until HotelSupplier threads are no longer active.
@@ -47,12 +50,20 @@ namespace HotelBookingSystem
                 // Check if an order needs to be created
                 if (roomsNeeded)
                 {
-                    CreateBaseOrder();
+                    if (bulkOrder)
+                    {
+                        CreateBulkOrder(hotelId);
+                    }
+                    else
+                    {
+                        CreateBaseOrder(hotelId);
+                    }
                 }
                 else
                 {
                     // No orders are needed so sleep the thread for some time
                     Console.WriteLine("WAITING: Travel Agency Thread ({0})", Thread.CurrentThread.Name);
+                    Thread.Sleep(1000);
                     roomsNeeded = true;
                 }
             }
@@ -67,22 +78,24 @@ namespace HotelBookingSystem
         public void Subscribe(HotelSupplier hotelSupplier)
         {
             Console.WriteLine("SUBSCRIBING: Price Cut Event");
-            hotelSupplier.PriceCut += CreateBulkOrder;
+            hotelSupplier.PriceCut += IssueBulkOrder;
         }
 
         /// <summary>
         /// Called once the TravelAgency thread has come back from sleeping. Orders BASE_ROOM_ORDER rooms.
         /// </summary>
-        private void CreateBaseOrder()
+        /// <param name="hotelId">Receiver ID for the Hotel</param>
+        private void CreateBaseOrder(string hotelId)
         {
-            // Tell system no order is needed
-            roomsNeeded = false;
             Console.WriteLine("CREATING: Base Order ({0})", Thread.CurrentThread.Name);
 
+            // Tell system no order is needed
+            roomsNeeded = false;
             OrderClass order = new OrderClass();
             order.Amount = BASE_ROOM_ORDER;
             order.CardNo = CC_NUMS[random.Next(0, CC_NUMS.Length)];
             order.SenderId = Thread.CurrentThread.Name;
+            order.ReceiverId = hotelId;
 
             Program.mb.setOneCell(Encoder.EncodeOrder(order));
         }
@@ -90,20 +103,31 @@ namespace HotelBookingSystem
         /// <summary>
         /// Called once a PriceCut event occurs. Orders BULK_ROOM_ORDER rooms.
         /// </summary>
-        /// <param name="e">Values passed from HotelSupplier thread</param>
-        private void CreateBulkOrder(PriceCutEventArgs e)
+        /// <param name="hotelId">Receiver ID for the Hotel</param>
+        private void CreateBulkOrder(string hotelId)
         {
+            Console.WriteLine("CREATING: Bulk Order ({0})", Thread.CurrentThread.Name);
+            
             // Tell system no order is needed
             roomsNeeded = false;
-            Console.WriteLine("CREATING: Bulk Order ({0})", e.Id);
-
             OrderClass order = new OrderClass();
             order.Amount = BULK_ROOM_ORDER;
             order.CardNo = CC_NUMS[random.Next(0, CC_NUMS.Length)];
             order.SenderId = Thread.CurrentThread.Name;
-            order.ReceiverId = e.Id;
+            order.ReceiverId = hotelId;
 
             Program.mb.setOneCell(Encoder.EncodeOrder(order));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        public void IssueBulkOrder(PriceCutEventArgs e)
+        {
+            bulkOrder = true;
+            hotelId = e.Id;
+            unitPrice = e.Price;
         }
 
         /// <summary>

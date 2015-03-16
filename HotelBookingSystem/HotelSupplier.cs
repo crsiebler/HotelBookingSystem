@@ -138,7 +138,7 @@ namespace HotelBookingSystem
             if (order.ReceiverId == Thread.CurrentThread.Name || order.ReceiverId == null)
             {
                 Console.WriteLine("RECEIVING: Order for Hotel Supplier ({0})", Thread.CurrentThread.Name);
-                OrderProcessing processor = new OrderProcessing(order);
+                OrderProcessing processor = new OrderProcessing(order, currentPrice);
                 Thread processingThread = new Thread(new ThreadStart(processor.ProcessOrder));
                 processingThreads.Add(processingThread);
                 processingThread.Name = "Processor_" + Thread.CurrentThread.Name;
@@ -146,7 +146,7 @@ namespace HotelBookingSystem
             }
             else
             {
-                Console.WriteLine("SKIPPING: Ignoring order not for Hotel Supplier ({0})", Thread.CurrentThread.Name);
+                Console.WriteLine("SKIPPING: Order not for Hotel Supplier ({0})", Thread.CurrentThread.Name);
             }
         }
     }

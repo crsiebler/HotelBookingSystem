@@ -24,14 +24,17 @@ namespace HotelBookingSystem
         private const string CC_REGEX = "^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\\d{3})\\d{11})$";
 
         private OrderClass order;
+        private double unitPrice;
 
         /// <summary>
         /// Constructor for the OrderProcesing
         /// </summary>
         /// <param name="order">Order to be processed</param>
-        public OrderProcessing(OrderClass order)
+        /// <param name="unitPrice">Unit Price for the Hotel Rooms</param>
+        public OrderProcessing(OrderClass order, double unitPrice)
         {
             this.Order = order;
+            this.UnitPrice = unitPrice;
         }
 
         /// <summary>
@@ -54,7 +57,10 @@ namespace HotelBookingSystem
                     return;
                 }
 
-                Console.WriteLine("PROCESSED: ({0}) Travel Agency Order {1}", Thread.CurrentThread.Name, order.ToString());
+                Console.WriteLine("PROCESSED: ({0}) Travel Agency Order {1}\n\tTOTAL PRICE: {2}",
+                    Thread.CurrentThread.Name, order.ToString(),
+                    ((order.Amount * unitPrice) / TAX + LOCATION_CHARGE).ToString("C")
+                );
             }
             else
             {
@@ -81,5 +87,15 @@ namespace HotelBookingSystem
             get { return order; }
             private set { order = value; }
         }
+
+        /// <summary>
+        /// Accessor/Mutators
+        /// </summary>
+        public double UnitPrice
+        {
+            get { return unitPrice; }
+            set { unitPrice = value; }
+        }
+
     }
 }
