@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,9 +14,10 @@ namespace HotelBookingSystem
     /// <summary>
     /// 
     /// </summary>
-    static class PricingModel
+    public static class PricingModel
     {
-        public const double BASE_RATE = 85.0; // Standard Rate 
+        private const double LOW_BASE_RATE = 65.0; // Standard Rate 
+        private const double HIGH_BASE_RATE = 85.0; // Standard Rate 
 
         private const int LOW_SPAN = 2; // 2 Day Stay
         private const int MED_SPAN = 4; // 4 Day Stay
@@ -34,6 +36,8 @@ namespace HotelBookingSystem
         private const double HIGH_OCCUPANCY_ADJUST = 1.5; // 50% Markup
         private const double MAX_OCCUPANCY_ADJUST = 2.0; // 100% Markup
 
+        private static Random random = new Random(); // Random number generator
+
         /// <summary>
         /// 
         /// </summary>
@@ -43,9 +47,17 @@ namespace HotelBookingSystem
         /// <returns></returns>
         public static double GetRates(double occupancy, DateTime checkIn, DateTime checkOut)
         {
+            if (Program.DEBUG) 
+                Console.WriteLine("PRICING: Occupancy ({0})\tCheck-In ({1})\tCheck-Out ({2})",
+                    (occupancy * 100).ToString("F") + "%", 
+                    checkIn.ToString("d", CultureInfo.InvariantCulture), 
+                    checkOut.ToString("d", CultureInfo.InvariantCulture)
+                );
+
             TimeSpan span = checkOut - checkIn;
 
-            return BASE_RATE * AdjustForSpan(span) * AdjustForOccupancy(occupancy);
+            return (random.NextDouble() * (LOW_BASE_RATE - HIGH_BASE_RATE) + LOW_BASE_RATE)
+                * AdjustForSpan(span) * AdjustForOccupancy(occupancy);
         }
 
         /// <summary>
@@ -55,20 +67,25 @@ namespace HotelBookingSystem
         /// <returns></returns>
         private static double AdjustForSpan(TimeSpan span)
         {
+            // Check the Span of the Travel Agency order
             if (span.TotalDays < LOW_SPAN)
             {
+                if (Program.DEBUG) Console.WriteLine("PRICING: Low Span");
                 return LOW_SPAN_ADJUST;
             }
             else if (span.TotalDays < MED_SPAN)
             {
+                if (Program.DEBUG) Console.WriteLine("PRICING: Medium Span");
                 return MED_SPAN_ADJUST;
             }
             else if (span.TotalDays < HIGH_SPAN)
             {
+                if (Program.DEBUG) Console.WriteLine("PRICING: High Span");
                 return HIGH_SPAN_ADJUST;
             }
             else
             {
+                if (Program.DEBUG) Console.WriteLine("PRICING: Max Span");
                 return MAX_SPAN_ADJUST;
             }
         }
@@ -82,18 +99,22 @@ namespace HotelBookingSystem
         {
             if (occupancy < LOW_OCCUPANCY)
             {
+                if (Program.DEBUG) Console.WriteLine("PRICING: Low Occupancy");
                 return LOW_OCCUPANCY_ADJUST;
             }
             else if (occupancy < MED_OCCUPANCY)
             {
+                if (Program.DEBUG) Console.WriteLine("PRICING: Medium Occupancy");
                 return MED_OCCUPANCY_ADJUST;
             }
             else if (occupancy < HIGH_OCCUPANCY)
             {
+                if (Program.DEBUG) Console.WriteLine("PRICING: High Occupancy");
                 return HIGH_OCCUPANCY_ADJUST;
             }
             else
             {
+                if (Program.DEBUG) Console.WriteLine("PRICING: Max Occupancy");
                 return MAX_OCCUPANCY_ADJUST;
             }
         }

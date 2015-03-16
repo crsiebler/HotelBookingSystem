@@ -14,7 +14,7 @@ namespace HotelBookingSystem
     /// <summary>
     /// 
     /// </summary>
-    class Program
+    public class Program
     {
         public const bool DEBUG = true;
 

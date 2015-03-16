@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 namespace HotelBookingSystem
 {
     /// <summary>
-    /// 
+    /// Order from the Travel Agency class and sent to the Hotel Suppliers through the Multi-Cell Buffer.
     /// </summary>
-    class OrderClass
+    public class OrderClass
     {
         private string senderId; // The identity of the sender (i.e. TravelAgency)
         private string receiverId; // The identity of the receiver (i.e. HotelSupplier)
@@ -23,16 +23,16 @@ namespace HotelBookingSystem
         private DateTime dateCreated = DateTime.Now; // Time the order is placed
 
         /// <summary>
-        /// 
+        /// Override method to display class fields as string.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>String Representation of the Order class</returns>
         public override string ToString()
         {
-            return "ORDER {ID: " + senderId
-                + "} {RECEIVER_ID: " + receiverId
-                + "} {CARD_NO: " + cardNo
-                + "} {AMOUNT: " + amount
-                + "} {CREATED: " + dateCreated.ToString("d", CultureInfo.InvariantCulture) + "}";
+            return "ORDER {ID: " + SenderId
+                + "} {RECEIVER_ID: " + ReceiverId
+                + "} {CARD_NO: " + CardNo
+                + "} {AMOUNT: " + Amount
+                + "} {CREATED: " + DateCreated.ToString("d", CultureInfo.InvariantCulture) + "}";
         }
 
         /// <summary>

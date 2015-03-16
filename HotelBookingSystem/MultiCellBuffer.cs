@@ -12,9 +12,11 @@ using System.Threading;
 namespace HotelBookingSystem
 {
     /// <summary>
-    /// 
+    /// Synchronization for the communication between the Travel Agency Threads and the Hotel Supplier Threads.
+    /// Utilizes a buffer of N size to store the order information as a string. The Travel Agency (Producer)is responsible for encoding the 
+    /// string while the Hotel Supplier (Consumer) is responsible for decoding the string.
     /// </summary>
-    class MultiCellBuffer
+    public class MultiCellBuffer
     {
         // Size of the Multi-Cell Buffer
         private const int N = 3; 

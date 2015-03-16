@@ -13,12 +13,12 @@ using System.Xml.Serialization;
 namespace HotelBookingSystem
 {
     /// <summary>
-    /// 
+    /// The Encoder converts the Order object into a string and sends the encoded string back to the caller. 
     /// </summary>
-    static class Encoder
+    public static class Encoder
     {
         /// <summary>
-        /// 
+        /// Utilizes XmlSerializer to encode the OrderClass into a string.
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
