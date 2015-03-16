@@ -41,7 +41,7 @@ namespace HotelBookingSystem
             if (PriceCut != null)
             {
                 // Fire the PriceCut event
-                Console.WriteLine("EVENT: Performing Price Cut Event (#{0}) ({1})", p, Thread.CurrentThread.Name);
+                Console.WriteLine("\nEVENT: Performing Price Cut Event (#{0}) ({1})\n", p, Thread.CurrentThread.Name);
                 p++;
                 PriceCut(new PriceCutEventArgs(Thread.CurrentThread.Name, currentPrice));
             }
