@@ -49,7 +49,7 @@ namespace HotelBookingSystem
         public static double GetRates(double occupancy, DateTime checkIn, DateTime checkOut)
         {
             if (Program.DEBUG) 
-                Console.WriteLine("PRICING: ({0}) Occupancy ({1})\tCheck-In ({2})\tCheck-Out ({3})",
+                Console.WriteLine("PRICING: ({0}) Occupancy ({1})\t({2} - {3})",
                     Thread.CurrentThread.Name,
                     (occupancy * 100).ToString("F") + "%", 
                     checkIn.ToString("d", CultureInfo.InvariantCulture), 

@@ -47,18 +47,22 @@ namespace HotelBookingSystem
             {
                 while (nElements == N)
                 {
-                    if (Program.DEBUG) Console.WriteLine("MONITOR: Waiting ({0})", Thread.CurrentThread.Name);
+                    if (Program.DEBUG) Console.WriteLine("MONITOR: Write Waiting {0}", Thread.CurrentThread.Name);
                     Monitor.Wait(this);
                 }
 
                 buffer[tail] = order;
                 tail = (tail + 1) % N;
-                Console.WriteLine("WRITING: Multi-Cell Buffer\n\n{0}\n{1}, Elements: {2}\n", order, DateTime.Now, nElements);
+                Console.WriteLine("WRITING: ({0}) Multi-Cell Buffer\n\n{1}\n{2}, Elements: {3}\n",
+                    Thread.CurrentThread.Name,
+                    order,
+                    DateTime.Now,
+                    nElements
+                );
                 nElements++;
                 Console.WriteLine("THREAD: ({0}) Leaving Write", Thread.CurrentThread.Name);
                 write.Release();
                 Monitor.Pulse(this);
-
             }
         }
 
@@ -76,14 +80,19 @@ namespace HotelBookingSystem
 
                 while (nElements == 0)
                 {
-                    if (Program.DEBUG) Console.WriteLine("MONITOR: Waiting ({0})", Thread.CurrentThread.Name);
+                    if (Program.DEBUG) Console.WriteLine("MONITOR: Read Waiting {0}", Thread.CurrentThread.Name);
                     Monitor.Wait(this);
                 }
 
                 element = buffer[head];
                 head = (head + 1) % N;
                 nElements--;
-                Console.WriteLine("READING: Multi-Cell Buffer\n\n{0}\n{1}, Elements: {2}\n", element, DateTime.Now, nElements);
+                Console.WriteLine("READING: ({0}) Multi-Cell Buffer\n\n{1}\n{2}, Elements: {3}\n", 
+                    Thread.CurrentThread.Name,
+                    element, 
+                    DateTime.Now,
+                    nElements
+                );
                 Console.WriteLine("THREAD: ({0}) Leaving Read", Thread.CurrentThread.Name);
                 read.Release();
                 Monitor.Pulse(this);

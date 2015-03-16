@@ -28,11 +28,11 @@ namespace HotelBookingSystem
         /// <returns>String Representation of the Order class</returns>
         public override string ToString()
         {
-            return "ORDER {ID: " + SenderId
-                + "} {RECEIVER_ID: " + ReceiverId
-                + "} {CARD_NO: " + CardNo
-                + "} {AMOUNT: " + Amount
-                + "} {CREATED: " + DateCreated.ToString("d", CultureInfo.InvariantCulture) + "}";
+            return "ORDER\n\t{ID: " + SenderId
+                + "}\n\t{RECEIVER_ID: " + ReceiverId
+                + "}\n\t{CARD_NO: " + CardNo
+                + "}\n\t{AMOUNT: " + Amount
+                + "}\n\t{CREATED: " + DateCreated.ToString("d", CultureInfo.InvariantCulture) + "}";
         }
 
         /// <summary>

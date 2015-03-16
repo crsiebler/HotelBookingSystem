@@ -23,6 +23,7 @@ namespace HotelBookingSystem
 
         private static Thread[] hotelThreads = new Thread[K];
         private static Thread[] agencyThreads = new Thread[N];
+        private static HotelSupplier[] hotelSuppliers = new HotelSupplier[K];
 
         public static MultiCellBuffer mb = new MultiCellBuffer();
 
@@ -34,7 +35,9 @@ namespace HotelBookingSystem
             // Initialize the Hotel Agencies
             for (int i = 0; i < K; ++i)
             {
-                hotelThreads[i] = new Thread(HotelSupplier.Run);
+                HotelSupplier hotelSupplier = new HotelSupplier();
+                hotelSuppliers[i] = hotelSupplier;
+                hotelThreads[i] = new Thread(hotelSupplier.Run);
                 hotelThreads[i].Name = "HotelSupplier_" + i;
                 hotelThreads[i].Start();
                 while (!hotelThreads[i].IsAlive);
@@ -43,12 +46,20 @@ namespace HotelBookingSystem
             // Initialize the Travel Agencies
             for (int i = 0; i < N; ++i)
             {
-                agencyThreads[i] = new Thread(TravelAgency.Run);
+                TravelAgency travelAgency = new TravelAgency();
+
+                for (int j= 0; j < K; ++j)
+                {
+                    travelAgency.Subscribe(hotelSuppliers[j]);
+                }
+
+                agencyThreads[i] = new Thread(travelAgency.Run);
                 agencyThreads[i].Name = "TravelAgency_" + i;
                 agencyThreads[i].Start();
                 while (!agencyThreads[i].IsAlive);
             }
 
+            /*
             // Block the main thread execution
             for (int i = 0; i < K; i++)
             {
@@ -60,11 +71,14 @@ namespace HotelBookingSystem
             {
                 agencyThreads[i].Join();
             }
+             */
 
             // Wait for the Hotels to perform P_MAX price cuts
             for (int i = 0; i < K; ++i)
             {
-                while (hotelThreads[i].IsAlive);
+                while (hotelThreads[i].IsAlive)
+                {
+                }
             }
 
             // Alert the Travel Agencies that the Hotels are no longer active
@@ -73,7 +87,7 @@ namespace HotelBookingSystem
                 TravelAgency.HotelsActive = false;
             }
 
-            Console.WriteLine("PROGRAM COMPLETED");
+            Console.WriteLine("\n\nPROGRAM COMPLETED");
 
             // Wait for user to hit a button
             Console.ReadKey();

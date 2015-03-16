@@ -21,18 +21,18 @@ namespace HotelBookingSystem
     {
         private const int P_MAX = 10; // Constant for Maximum Price Cuts
 
-        private static int p = 1; // Counter for the price cuts
-        private static double currentPrice = 0.0; // Current Unit Price for the rooms
-        private static double previousPrice = 0.0; // Previous Unit Price for the rooms
+        private int p = 1; // Counter for the price cuts
+        private double currentPrice = 0.0; // Current Unit Price for the rooms
+        private double previousPrice = 0.0; // Previous Unit Price for the rooms
         private static Random random = new Random(); // Random number generator
 
         public delegate void PriceCutHandler(PriceCutEventArgs e);
-        public static event PriceCutHandler PriceCut;
+        public event PriceCutHandler PriceCut;
 
         /// <summary>
         /// Event fired once a PriceCut has occurred.
         /// </summary>
-        private static void PriceCutEvent()
+        private void PriceCutEvent()
         {
             // Make sure the event is subscribed to
             if (PriceCut != null)
@@ -52,13 +52,22 @@ namespace HotelBookingSystem
         /// Execution thread for the HotelSupplier class. Sets the price from the PricingModel, fires PriceCut events if price is lowered, and
         /// processes any orders received from the Multi-Cell buffer.
         /// </summary>
-        public static void Run()
+        public void Run()
         {
             // Continue until P_MAX price cuts have been sent
-            while (p < P_MAX)
+            while (p <= P_MAX)
             {
                 // Calculate the Unit Price for rooms from the Pricing model
                 SetPrice();
+
+                if (Program.DEBUG)
+                {
+                    Console.WriteLine("CHECKING: ({0}) Price Comparison ({1} to {2})",
+                        Thread.CurrentThread.Name,
+                        previousPrice.ToString("C"),
+                        currentPrice.ToString("C")
+                    );
+                }
 
                 // Check if the previous price was more than the current price
                 if (currentPrice < previousPrice)
@@ -76,12 +85,14 @@ namespace HotelBookingSystem
                 //Console.WriteLine("WAITING: Hotel Supplier Thread ({0})", Thread.CurrentThread.Name);
                 //Thread.Sleep(5000);
             }
+
+            Console.WriteLine("CLOSING: Hotel Supplier Thread ({0})", Thread.CurrentThread.Name);
         }
 
         /// <summary>
         /// Calculate the price from the PricingModel.
         /// </summary>
-        private static void SetPrice()
+        private void SetPrice()
         {
             DateTime today = DateTime.Now;
             DateTime future = today.AddDays(random.Next(1,10));
@@ -104,7 +115,7 @@ namespace HotelBookingSystem
         /// Collect orders from the Multi-Cell Buffer
         /// </summary>
         /// <returns></returns>
-        private static OrderClass RetrieveOrder()
+        private OrderClass RetrieveOrder()
         {
             return Decoder.DecodeOrder(Program.mb.getOneCell());
         }
@@ -113,14 +124,15 @@ namespace HotelBookingSystem
         /// Create a new thread to process the order.
         /// </summary>
         /// <param name="order"></param>
-        private static void ProcessOrder(OrderClass order)
+        private void ProcessOrder(OrderClass order)
         {
             // Make sure the order is for the current HotelSupplier
             if (order.ReceiverId == Thread.CurrentThread.Name || order.ReceiverId == null)
             {
-                Console.WriteLine("RECEIVING: Order for Hotel Supplier ({0})", order.ReceiverId);
+                Console.WriteLine("RECEIVING: Order for Hotel Supplier ({0})", Thread.CurrentThread.Name);
                 OrderProcessing processor = new OrderProcessing(order);
                 Thread processingThread = new Thread(new ThreadStart(processor.ProcessOrder));
+                processingThread.Name = "Processor_" + Thread.CurrentThread.Name;
                 processingThread.Start();
             }
             else

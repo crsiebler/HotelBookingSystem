@@ -33,16 +33,14 @@ namespace HotelBookingSystem
         };
 
         private static bool hotelsActive = true;
-        private static bool roomsNeeded = true;
         private static Random random = new Random(); // Random number generator
+        private bool roomsNeeded = true;
 
         /// <summary>
         /// Execution thread for the TravelAgency class. Creates a base order continuously until HotelSupplier threads are no longer active.
         /// </summary>
-        public static void Run()
+        public void Run()
         {
-            Subscribe();
-
             // Continue thread until Hotels are no longer active
             while (hotelsActive)
             {
@@ -55,26 +53,28 @@ namespace HotelBookingSystem
                 {
                     // No orders are needed so sleep the thread for some time
                     Console.WriteLine("WAITING: Travel Agency Thread ({0})", Thread.CurrentThread.Name);
-                    Thread.Sleep(15000);
+                    //Thread.Sleep(5000);
                     roomsNeeded = true;
                 }
             }
+
+            Console.WriteLine("CLOSING: Travel Agency Thread ({0})", Thread.CurrentThread.Name);
         }
 
         /// <summary>
         /// Hook the PriceCut event to the CreateBulkOrder method, so a large order will be placed once the event is fired.
         /// </summary>
         /// <param name="hotel"></param>
-        public static void Subscribe()
+        public void Subscribe(HotelSupplier hotelSupplier)
         {
-            Console.WriteLine("SUBSCRIBING: Price Cut Event ({0})", Thread.CurrentThread.Name);
-            HotelSupplier.PriceCut += CreateBulkOrder;
+            Console.WriteLine("SUBSCRIBING: Price Cut Event");
+            hotelSupplier.PriceCut += CreateBulkOrder;
         }
 
         /// <summary>
         /// Called once the TravelAgency thread has come back from sleeping. Orders BASE_ROOM_ORDER rooms.
         /// </summary>
-        private static void CreateBaseOrder()
+        private void CreateBaseOrder()
         {
             // Tell system no order is needed
             roomsNeeded = false;
@@ -93,7 +93,7 @@ namespace HotelBookingSystem
         /// </summary>
         /// <param name="hotel"></param>
         /// <param name="e"></param>
-        private static void CreateBulkOrder(PriceCutEventArgs e)
+        private void CreateBulkOrder(PriceCutEventArgs e)
         {
             // Tell system no order is needed
             roomsNeeded = false;
@@ -105,7 +105,7 @@ namespace HotelBookingSystem
             order.SenderId = Thread.CurrentThread.Name;
             order.ReceiverId = e.Id;
 
-            Program.mb.setOneCell(Encoder.EncodeOrder(order));
+            //Program.mb.setOneCell(Encoder.EncodeOrder(order));
         }
 
         /// <summary>

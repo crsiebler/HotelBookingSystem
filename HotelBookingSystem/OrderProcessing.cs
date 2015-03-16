@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
@@ -20,17 +21,7 @@ namespace HotelBookingSystem
     {
         private const double TAX = 0.08;
         private const double LOCATION_CHARGE = 50.00;
-        private const string CC_REGEX
-            = "^(?:4[0-9]{12}(?:[0-9]{3})?"         // Visa
-            + "|  5[1-5][0-9]{14}"                  // MasterCard
-            + "|  3[47][0-9]{13}"                   // American Express
-            + "|  3(?:0[0-5]|[68][0-9])[0-9]{11}"   // Diners Club
-            + "|  6(?:011|5[0-9]{2})[0-9]{12}"      // Discover
-            + "|  (?:2131|1800|35\\d{3})\\d{11}"    // JCB
-            + ")$";
-
-        private const string CC_REGEX2
-            = "^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\\d{3})\\d{11})$";
+        private const string CC_REGEX = "^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\\d{3})\\d{11})$";
 
         private OrderClass order;
 
@@ -50,24 +41,24 @@ namespace HotelBookingSystem
         {
             if (order != null)
             {
-                Console.WriteLine("PROCESSING: Travel Agency Order ({0})", order.ToString());
+                Console.WriteLine("PROCESSING: ({0}) Travel Agency Order {1}", Thread.CurrentThread.Name, order.ToString());
 
                 // Check for a valid credit card number
                 if (ValidateCreditCard(order.CardNo))
                 {
-                    Console.WriteLine("VALIDATED: Credit Card Number Valid");
+                    Console.WriteLine("VALIDATED: ({0}) Credit Card Number Valid", Thread.CurrentThread.Name);
                 }
                 else
                 {
-                    Console.WriteLine("INVALIDATED: Credit Card Number Not Valid");
+                    Console.WriteLine("INVALIDATED: ({0}) Credit Card Number Not Valid", Thread.CurrentThread.Name);
                     return;
                 }
 
-                Console.WriteLine("PROCESSED: Travel Agency Order ({0})", order.ToString());
+                Console.WriteLine("PROCESSED: ({0}) Travel Agency Order {1}", Thread.CurrentThread.Name, order.ToString());
             }
             else
             {
-                Console.WriteLine("PROCESSING: No order received");
+                Console.WriteLine("PROCESSING: ({0}) No order received", Thread.CurrentThread.Name);
             }
         }
 
@@ -79,7 +70,7 @@ namespace HotelBookingSystem
         /// <returns></returns>
         private bool ValidateCreditCard(long ccNum)
         {
-            return Regex.IsMatch(ccNum.ToString(), CC_REGEX2);
+            return Regex.IsMatch(ccNum.ToString(), CC_REGEX);
         }
 
         /// <summary>
@@ -90,6 +81,5 @@ namespace HotelBookingSystem
             get { return order; }
             private set { order = value; }
         }
-
     }
 }
